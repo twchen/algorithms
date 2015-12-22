@@ -11,6 +11,47 @@ Depending on your language, stack may not be supported natively. You may simulat
 You may assume that all operations are valid (for example, no pop or peek operations will be called on an empty queue).
 */
 
+// solution 2: simpler solution
+class Queue {
+public:
+    // Push element x to the back of queue.
+    void push(int x) {
+        while(rev.size()){
+            s.push(rev.top());
+            rev.pop();
+        }
+        s.push(x);
+    }
+
+    // Removes the element from in front of queue.
+    void pop(void) {
+        while(s.size()){
+            rev.push(s.top());
+            s.pop();
+        }
+        rev.pop();
+    }
+
+    // Get the front element.
+    int peek(void) {
+        while(s.size()){
+            rev.push(s.top());
+            s.pop();
+        }
+        return rev.top();
+    }
+
+    // Return whether the queue is empty.
+    bool empty(void) {
+        return s.empty() && rev.empty();
+    }
+    
+private:
+    stack<int> s;
+    stack<int> rev;
+};
+
+// solution 1
 class Queue {
 public:
     Queue(){
