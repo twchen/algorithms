@@ -13,6 +13,7 @@ Return a deep copy of the list.
  *     RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
  * };
  */
+
 class Solution {
 public:
     RandomListNode *copyRandomList(RandomListNode *head) {
@@ -72,5 +73,62 @@ public:
             copy->next = (cur->next ? cur->next->random : nullptr);
         }
         return new_head;
+    }
+};
+
+class Solution {
+public:
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if(!head) return nullptr;
+        // step 1: duplicate nodes
+        // the next pointer of current node points to the copy
+        // the next pointer of the copy points to the original next
+        RandomListNode *curr = head, *copy;
+        while(curr){
+            copy = new RandomListNode(curr->label);
+            copy->next = curr->next;
+            curr->next = copy;
+            curr = copy->next;
+        }
+
+        // step 2: copy random links
+        curr = head;
+        while(curr){
+            if(curr->random){
+                curr->next->random = curr->random->next;
+            }
+            curr = curr->next->next;
+        }
+        // separate lists
+        // =========================================
+        // method 1
+        /*
+        RandomListNode *new_head = head->next;
+        curr = head;
+        while(true){
+            copy = curr->next;
+            curr->next = copy->next;
+            curr = curr->next;
+            if(curr){
+                copy->next = curr->next;
+            }else{
+                copy->next = nullptr;
+                break;
+            }
+        }
+        return new_head;
+        */
+        // method 2
+        RandomListNode dummpy(0);
+        copy = &dummpy;
+        curr = head;
+        while(curr){
+            copy->next = curr->next;
+            copy = copy->next;
+            curr->next = copy->next;
+            curr = curr->next;
+        }
+        return dummpy.next;
+        // ==========================================
     }
 };
