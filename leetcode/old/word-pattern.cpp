@@ -12,6 +12,43 @@ Notes:
 You may assume pattern contains only lowercase letters, and str contains lowercase letters separated by a single space.
 */
 
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        map<char, string> h1;
+        map<string, char> h2;
+        stringstream ss(str);
+        string s;
+        for(char c: pattern){
+            ss >> s;
+            if(s.empty() || h1.count(c) && h1[c] != s || h2.count(s) && h2[s] != c)
+                return false;
+            h1[c] = s;
+            h2[s] = c;
+        }
+        return ss.eof();
+    }
+};
+
+// better solution
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        // p2i, w2i: map pattern and word to 1 + the index of the last occurance of the bijection
+        vector<int> p2i(26);
+        map<string, int> w2i;
+        stringstream ss(str);
+        int i = 0;
+        int n = pattern.size();
+        for(string word; ss >> word; ++i){
+            if(i == n || p2i[pattern[i] - 'a'] != w2i[word])
+                return false;
+            p2i[pattern[i] - 'a'] = w2i[word] = i + 1;
+        }
+        return i == n;
+    }
+};
+
 // use stringstream to get next word
 class Solution {
 public:

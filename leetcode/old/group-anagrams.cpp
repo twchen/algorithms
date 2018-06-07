@@ -48,3 +48,28 @@ public:
         return result;
     }
 };
+
+// even more efficient solution
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, int> hash;
+        vector<vector<string>> res;
+        for(string& str: strs){
+            string count(26, '\0');
+            for(char c: str){
+                ++count[c - 'a'];
+            }
+            auto it = hash.find(count);
+            if(it == hash.end()){
+                hash[count] = res.size();
+                vector<string> words;
+                words.push_back(str);
+                res.push_back(words);
+            }else{
+                res[it->second].push_back(str);
+            }
+        }
+        return res;
+    }
+};
